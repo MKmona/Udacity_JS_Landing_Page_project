@@ -37,6 +37,33 @@ function scrollToSection(event){
   document.getElementById(sec_id).scrollIntoView({ behavior: 'smooth', block: 'center'}); 
 }
 
+// Get Position
+function refreshActive(){
+  const allSections = document.getElementsByTagName('section');
+  let activeSectionIndex = -1;
+  for(let i=0; i<allSections.length; i++){
+    if(
+      allSections[i].getBoundingClientRect().top < (window.innerHeight - 0.25*window.innerHeight)&&
+      allSections[i].getBoundingClientRect().bottom > (0 + 0.25*window.innerHeight)){
+      activeSectionIndex = i;
+    }
+  }
+
+  for(let i=0; i<allSections.length; i++){
+    let anchor = document.getElementById('anchor'+i);
+    if(activeSectionIndex === i){
+      allSections[i].className='your-active-class';
+      anchor.classList.add('active');
+    }
+    else{
+      allSections[i].className = '';
+      anchor.classList.remove('active');
+    }
+
+  }
+}
+window.addEventListener("scroll", refreshActive);
+
 
 
 
@@ -71,7 +98,7 @@ function scrollToSection(event){
 let list =document.querySelector('#navbar__list');
 
 // a loop to create anchors and list items
- for (let i = 1; i <= numberOfSections.length; i++) {
+for (let i = 1; i <= numberOfSections.length; i++) {
 
   //Create a <li> item
   let listItem = document.createElement('li'); 
@@ -82,16 +109,21 @@ let list =document.querySelector('#navbar__list');
   //appending anchor <a> element as a child to <li>. 
   listItem.appendChild(newAnchor);
 
-    // Create anchor title
-    newAnchor.innerText='Section ' + i;
-    newAnchor.addEventListener('click', scrollToSection); 
+  // Create anchor title
+  newAnchor.innerText='Section ' + i;
+  newAnchor.addEventListener('click', scrollToSection); 
 
-    // Create anchor link
-    let sectionId= '#section'+i;
-   newAnchor.href = sectionId ;   
-   newAnchor.className="menu__link";
+  // Create anchor link
+  let sectionId= '#section'+i;
+  newAnchor.href = sectionId ;   
+  newAnchor.classList.add("menu__link");
+  newAnchor.id = 'anchor' + (i-1);
+  
+  if(i==1){
+    newAnchor.classList.add("active");
+  }
    
-    fragment.appendChild(listItem);
+  fragment.appendChild(listItem);
 }
    
 //Add the navigation tabs to the UL
