@@ -23,6 +23,9 @@
 */
 const fragment = document.createDocumentFragment();
 let numberOfSections = document.querySelectorAll('section');
+// Find the UL where I will place the navigation bar
+let list =document.querySelector('#navbar__list');
+
 
 
 /**
@@ -30,25 +33,39 @@ let numberOfSections = document.querySelectorAll('section');
  * Start Helper Functions
  * 
 */
+//Create Anchor element
+function createAnchor(i){
+ 
+  let newAnchor = document.createElement('a');
 
+  // Create anchor title
+  newAnchor.innerText='Section ' + i;
+  newAnchor.addEventListener('click', scrollToSection); 
+
+  // Create anchor link
+  let sectionId= '#section'+i;
+  newAnchor.href = sectionId ;   
+  newAnchor.classList.add("menu__link");
+  newAnchor.id = 'anchor' + (i-1);
+  return newAnchor;
+  
+}
+
+/**
+ * End Helper Functions
+ * Begin Main Functions
+ * 
+*/
+
+// Scroll to anchor ID using scrollTO event
 function scrollToSection(event){
   event.preventDefault(); 
   const sec_id = event.target.getAttribute('href').slice(1);
   document.getElementById(sec_id).scrollIntoView({ behavior: 'smooth', block: 'center'}); 
 }
 
-// Get Position
-function refreshActive(){
-  const allSections = document.getElementsByTagName('section');
-  let activeSectionIndex = -1;
-  for(let i=0; i<allSections.length; i++){
-    if(
-      allSections[i].getBoundingClientRect().top < (window.innerHeight - 0.25*window.innerHeight)&&
-      allSections[i].getBoundingClientRect().bottom > (0 + 0.25*window.innerHeight)){
-      activeSectionIndex = i;
-    }
-  }
-
+// Set sections as active
+function setSectionsActive(allSections,activeSectionIndex){
   for(let i=0; i<allSections.length; i++){
     let anchor = document.getElementById('anchor'+i);
     if(activeSectionIndex === i){
@@ -62,24 +79,40 @@ function refreshActive(){
 
   }
 }
-window.addEventListener("scroll", refreshActive);
-
-
-
-
-/**
- * End Helper Functions
- * Begin Main Functions
- * 
-*/
 
 // build the nav
+function buildMenu(numberOfSections,fragment,list){
+  for (let i = 1; i <= numberOfSections.length; i++) {
+    //Create a <li> item
+    let listItem = document.createElement('li'); 
+    newAnchor=createAnchor(i);
+
+    if(i==1){
+      newAnchor.classList.add("active");
+    }
+
+    listItem.appendChild(newAnchor);
+    fragment.appendChild(listItem);
+  }
+  list.appendChild(fragment);
+}
 
 
 // Add class 'active' to section when near top of viewport
+function refreshActive(){
+  const allSections = document.getElementsByTagName('section');
+  let activeSectionIndex = -1;
+  for(let i=0; i<allSections.length; i++){
+    if(
+      allSections[i].getBoundingClientRect().top < (window.innerHeight - 0.25*window.innerHeight)&&
+      allSections[i].getBoundingClientRect().bottom > (0 + 0.25*window.innerHeight)){
+      activeSectionIndex = i;
+    }
+  }
+  setSectionsActive(allSections,activeSectionIndex);
+ 
+}
 
-
-// Scroll to anchor ID using scrollTO event
 
 /**
  * End Main Functions
@@ -88,47 +121,12 @@ window.addEventListener("scroll", refreshActive);
 */
 
 // Build menu 
+buildMenu(numberOfSections,fragment,list);
 
 // Scroll to section on link click
+window.addEventListener("scroll", refreshActive);
 
 
-// Set sections as active
-
-// Find the UL where I will place the navigation bar
-let list =document.querySelector('#navbar__list');
-
-// a loop to create anchors and list items
-for (let i = 1; i <= numberOfSections.length; i++) {
-
-  //Create a <li> item
-  let listItem = document.createElement('li'); 
-
-  // Create anchor element
-  let newAnchor = document.createElement('a');
-
-  //appending anchor <a> element as a child to <li>. 
-  listItem.appendChild(newAnchor);
-
-  // Create anchor title
-  newAnchor.innerText='Section ' + i;
-  newAnchor.addEventListener('click', scrollToSection); 
-
-  // Create anchor link
-  let sectionId= '#section'+i;
-  newAnchor.href = sectionId ;   
-  newAnchor.classList.add("menu__link");
-  newAnchor.id = 'anchor' + (i-1);
-  
-  if(i==1){
-    newAnchor.classList.add("active");
-  }
-   
-  fragment.appendChild(listItem);
-}
-   
-//Add the navigation tabs to the UL
-list.appendChild(fragment);
 
 
-//window.addEventListener('scroll', toggleActiveState); 
 
