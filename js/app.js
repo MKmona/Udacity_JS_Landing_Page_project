@@ -43,8 +43,6 @@ function createAnchor(i){
   newAnchor.addEventListener('click', scrollToSection); 
 
   // Create anchor link
-  let sectionId= '#section'+i;
-  newAnchor.href = sectionId ;   
   newAnchor.classList.add("menu__link");
   newAnchor.id = 'anchor' + (i-1);
   return newAnchor;
@@ -60,7 +58,7 @@ function createAnchor(i){
 // Scroll to anchor ID using scrollTO event
 function scrollToSection(event){
   event.preventDefault(); 
-  const sec_id = event.target.getAttribute('href').slice(1);
+  const sec_id = event.target.innerText.replace('Section ', 'section');
   document.getElementById(sec_id).scrollIntoView({ behavior: 'smooth', block: 'center'}); 
 }
 

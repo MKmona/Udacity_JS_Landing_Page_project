@@ -232,10 +232,5 @@ section.your-active-class .landing__container::after {
 		           rotate(-360deg);
 	}
 }
-/* Style the active class for anchors */
-.active, .anchor:hover {
-    background-color: rgba(187, 186, 178, 0.644);
-    color: white;
-  }
 
   
